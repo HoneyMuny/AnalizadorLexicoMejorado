@@ -6,9 +6,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <regex>
-#include <iterator>
 #include <vector>
+#include <algorithm>
 #include <msclr\marshal_cppstd.h>
 #include <windows.h>
 
@@ -94,33 +93,34 @@ namespace AL {
 			// Texto
 			// 
 			this->Texto->AutoSize = true;
-			this->Texto->Font = (gcnew System::Drawing::Font(L"Romantic", 27.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(2)));
+			this->Texto->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 27.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->Texto->Location = System::Drawing::Point(29, 9);
 			this->Texto->Name = L"Texto";
-			this->Texto->Size = System::Drawing::Size(105, 41);
+			this->Texto->Size = System::Drawing::Size(112, 42);
 			this->Texto->TabIndex = 0;
 			this->Texto->Text = L"Texto";
+			this->Texto->Click += gcnew System::EventHandler(this, &MyForm::Texto_Click);
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Romantic", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(2)));
+			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->label2->Location = System::Drawing::Point(265, 23);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(83, 27);
+			this->label2->Size = System::Drawing::Size(94, 29);
 			this->label2->TabIndex = 1;
 			this->label2->Text = L"Tokens";
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Romantic", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(2)));
+			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->label3->Location = System::Drawing::Point(265, 383);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(83, 27);
+			this->label3->Size = System::Drawing::Size(93, 29);
 			this->label3->TabIndex = 2;
 			this->label3->Text = L"Errores";
 			// 
@@ -202,11 +202,11 @@ namespace AL {
 			// nombre
 			// 
 			this->nombre->AutoSize = true;
-			this->nombre->Font = (gcnew System::Drawing::Font(L"Romantic", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(2)));
+			this->nombre->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
 			this->nombre->Location = System::Drawing::Point(22, 445);
 			this->nombre->Name = L"nombre";
-			this->nombre->Size = System::Drawing::Size(105, 18);
+			this->nombre->Size = System::Drawing::Size(113, 20);
 			this->nombre->TabIndex = 10;
 			this->nombre->Text = L"Archivo en uso";
 			this->nombre->Click += gcnew System::EventHandler(this, &MyForm::nombre_Click);
@@ -237,10 +237,6 @@ namespace AL {
 
 #pragma endregion
 		// Declaraciones
-		String^ SRegex = "regex.txt";
-		String^ MRegex = "mRegex.txt";
-		String^ WRegex = "wRegex.txt";
-		String^ MWRegex = "mwRegex.txt";
 		String^ Inicio = "nada";
 
 		// Boton para abrir un archivo
@@ -279,40 +275,11 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	   // Boton para analizar el texto
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	std::vector<std::string> rRegex;
-	std::vector<std::string> messageRreg;
-	std::vector<std::string> wvRegex;
-	std::vector<std::string> messageWreg;
-	std::vector<std::pair<std::string, std::string>> v;
-	std::vector<std::pair<std::string, std::string>> f;
-
-	std::string sRegex = abrirArc(CMU(SRegex));
-	std::string mRegex = abrirArc(CMU(MRegex));
-	std::string wRegex = abrirArc(CMU(WRegex));
-	std::string mwRegex = abrirArc(CMU(MWRegex));
-	std::string inicio = abrirArc(CMU(Inicio));
-
 	if (Inicio == "nada") {
 		MessageBox::Show("Debe escoger un archivo", "Aviso");
 	}
 	else {
-		rRegex = split(sRegex, '\n');
-		messageRreg = split(mRegex, '\n');
-
-		wvRegex = split(wRegex, '\n');
-		messageWreg = split(mwRegex, '\n');
-
-
-		for (int i = 0; i < rRegex.size(); i++) {
-			v.push_back(std::pair<std::string, std::string&>(rRegex[i], messageRreg[i]));
-		}
-
-		for (int i = 0; i < wvRegex.size(); i++) {
-			f.push_back(std::pair<std::string, std::string&>(wvRegex[i], messageWreg[i]));
-		}
-
-		analyzeWrong(inicio, f);
-		analyzeRight(inicio, v);
+		analizar(CMU(Inicio));
 	}
 
 }
@@ -332,7 +299,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 }
 
 	   // Metodos
-// Conversores
+// Conversores de string
 	   string CMU(System::String^ info)
 	   {
 		   string result;
@@ -345,76 +312,213 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 		   result = gcnew String(info.c_str());
 		   return result;
 	   }
-// Une dos vectores string en un solo vector de pares, vease une el vector de regex con los mensajes
-	   std::vector<std::string> split(std::string text, char delim) {
-		   string line;
-		   vector<string> vec;
-		   stringstream ss(text);
-		   while (std::getline(ss, line, delim)) {
-			   vec.push_back(line);
-		   }
-		   return vec;
-	   }
 
-// Analiza lo que se ingresa y dependiendo al tipo de regex con el que coincida lanza el mensaje correspondiente
-	   void analyzeRight(string str, std::vector<std::pair<std::string, std::string>> vec) {
-		   string input = str;
-		   string save;
-		   string reg;
-
-		   for (auto const& x : vec)
-			   reg += "(" + x.first + ")|";
-
-		   reg.pop_back();
-
-		   std::regex re(reg, regex::extended);
-
-		   auto words_begin = sregex_iterator(input.begin(), input.end(), re);
-		   auto words_end = sregex_iterator();
-
-		   for (auto it = words_begin; it != words_end; ++it)
-		   {
-			   size_t index = 0;
-
-			   for (; index < it->size(); ++index)
-				   if (!it->str(index + 1).empty()) // Determina el match al que ha llegado
-					   break;
-
-			   save = save + vec[index].second + "\n";
+	   int relaciona(char c) {
+		   if (c >= '0' && c <= '9') {
+			   return 2;
 		   }
 
-		   tokens->Text = CUM(save);
-	   }
-
-	   void analyzeWrong(string str, std::vector<std::pair<std::string, std::string>> vec) {
-		   string input = str;
-		   string save;
-		   string reg;
-
-		   for (auto const& x : vec)
-			   reg += "(" + x.first + ")|";
-
-		   reg.pop_back();
-
-		   std::regex re(reg, regex::extended);
-
-		   auto words_begin = sregex_iterator(input.begin(), input.end(), re);
-		   auto words_end = sregex_iterator();
-
-		   for (auto it = words_begin; it != words_end; ++it)
-		   {
-			   size_t index = 0;
-
-			   for (; index < it->size(); ++index)
-				   if (!it->str(index + 1).empty()) // Determina el match al que ha llegado
-					   break;
-
-			   save = save + vec[index].second + "\n";
+		   switch (c) {
+		   case '\n': return 3;
+		   case '\t': return 4;
+		   case '\b': return 5;
+		   case 'E': return 6;
+		   case'e': return 7;
+		   case '.': return 8;
+		   case '"': return 9;
+		   case '\'': return 10;
+		   case '/': return 11;
+		   case '*': return 12;
+		   case '+': return 13;
+		   case '-': return 14;
+		   case '%': return 15;
+		   case '<': return 16;
+		   case '>': return 17;
+		   case '[': return 18;
+		   case ']': return 19;
+		   case '(': return 20;
+		   case ')': return 21;
+		   case '{': return 22;
+		   case '}': return 23;
+		   case '&': return 24;
+		   case '=': return 25;
+		   case '_': return 26;
+		   case '!': return 27;
+		   case '|': return 28;
+		   case ',': return 29;
+		   case ';': return 30;
+		   case '#': return 31;
 		   }
 
-		   errores->Text = CUM(save);
+		   if (c >= 'a' && c <= 'z') {
+			   return 1;
+		   }
+		   if (c >= 'A' && c <= 'Z') {
+			   return 0;
+		   }
+
+		   return 32;
 	   }
 
+	   std::string token(int e) {
+
+		   switch (e) {
+		   case 100: return "Palabra reservada \n";
+		   case 101: return "Identificador \n";
+		   case 102: return "Entero \n";
+		   case 103: return "Real \n";
+		   case 104: return "Notacion cientifica \n";
+		   case 105: return "Suma \n";
+		   case 106: return "Resta \n";
+		   case 107: return "Multiplicacion \n";
+		   case 108: return "Division \n";
+		   case 109: return "Asigna \n";
+		   case 110: return "Igual \n";
+		   case 111: return "Menor \n";
+		   case 112: return "Menor igual \n";
+		   case 113: return "Mayor \n";
+		   case 114: return "Mayor igual \n";
+		   case 115: return "Diferente \n";
+		   case 116: return "Not \n";
+		   case 117: return "And \n";
+		   case 118: return "Or \n";
+		   case 119: return "Parentesis abre \n";
+		   case 120: return "Parentesis cierra \n";
+		   case 121: return "Corchete abre \n";
+		   case 122: return "Corchete cierra \n";
+		   case 123: return "Punto y coma \n";
+		   case 124: return "Coma \n";
+		   case 125: return "Const char \n";
+		   case 126: return "String \n";
+		   case 127: return "Line com \n";
+		   case 128: return "Modulo \n";
+		   case 129: return "Llave abre \n";
+		   case 130: return "Llave cierra \n";
+		   }
+	   }
+
+	   std::string error(int e) {
+		   switch (e) {
+		   case 500: return "500: Se esperaba digito o e despues del punto \n";
+		   case 501: return "501: Se esperaba digito, signo de suma o signo de resta \n";
+		   case 502: return "502: Se esperaba digito despues del signo \n";
+		   case 503: return "503: Se esperaba otro & \n";
+		   case 504: return "504: Se esperaba otro | \n";
+		   case 505: return "505: Se esperaba un caracter \n";
+		   case 506: return "506: Caracter no esperado \n";
+		   case 507: return "507: Se esperaba simbolo de cierre \n";
+		   }
+	   }
+
+	   int reservadas(string algo) {
+		   string reserv[18] = { "class", "endclass", "int", "float", "char", "string", "bool", "if", "else", "do", "while", "input", "output", "def", "to", "break", "loop", "of"};
+
+		   for (int i = 0; i < 18; i++) {
+			   if (algo == reserv[i]) {
+				   return i;
+			   }
+		   }
+
+		   return -1;
+	   }
+
+// Analiza lo que se ingresa y dependiendo de lo que se trate lanza el mensaje correspondiente
+	   void analizar(string file) {
+		   int est = 0;
+		   int colum, itera;
+		   string salidaT;
+		   string salidaE;
+		   string archive;
+
+		   const int row = 20;
+		   const int col = 33;
+
+		   archive = abrirArc(file);
+
+		   int FunTrans[row][col] = { 2	,	1	,	3	,	0	,	0	,	0	,	2	,	1	,	506	,	17	,	15	,	108	,	107	,	105	,	106	,	128	,	10	,	11	,	121	,	122	,	119	,	120	,	129	,	130	,	13	,	9	,	506	,	12	,	14	,	124	,	123	,	19	,	506	,
+2	,	1	,	2	,	100	,	100	,	100	,	2	,	1	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	100	,	2	,	100	,	100	,	100	,	100	,	100	,	100	,
+2	,	2	,	2	,	101	,	101	,	101	,	2	,	2	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	101	,	2	,	101	,	101	,	101	,	101	,	101	,	101	,
+102	,	102	,	3	,	102	,	102	,	102	,	102	,	102	,	4	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,	102	,
+500	,	500	,	5	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,	500	,
+103	,	103	,	5	,	103	,	103	,	103	,	6	,	6	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,	103	,
+501	,	501	,	8	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	7	,	7	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,	501	,
+502	,	502	,	8	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,	502	,
+104	,	104	,	8	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,	104	,
+109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,	110	,	109	,	109	,	109	,	109	,	109	,	109	,	109	,
+111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,	112	,	111	,	111	,	111	,	111	,	111	,	111	,	111	,
+113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,	114	,	113	,	113	,	113	,	113	,	113	,	113	,	113	,
+116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,	115	,	116	,	116	,	116	,	116	,	116	,	116	,	116	,
+503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	117	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,	503	,
+504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	504	,	118	,	504	,	504	,	504	,	504	,
+16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	505	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,	16	,
+507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	125	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,	507	,
+17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	18	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,	17	,
+126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	17	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,	126	,
+19	,	19	,	19	,	127	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19	,	19 };
+
+		   int poscero = 0;
+		   int posfinal;
+		   int i = 0;
+		   char chara;
+		   string buffer="";
+		   std::string xd = "";
+		   int ilength = archive.size();
+
+		   while (i < archive.size()) {
+			   xd = "";
+
+			   if (i == ilength - 1) {
+				   archive.append("\n");
+			   }
+
+			   chara = archive.at(i);
+
+			   buffer += chara;
+
+			   colum = relaciona(chara);
+
+			   if (est == 0) {
+				   poscero = i;
+			   }
+
+			   est = FunTrans[est][colum];
+
+			   if (est >= 100 && est <= 499) {
+				   // Revisa si el token es una palabra reservada valida
+				   if (est == 100) {
+
+					   buffer = (buffer.substr(0,buffer.size()-1));
+
+					   if (reservadas(buffer) == -1) {
+						   est = 101;
+					   } if (reservadas(buffer) >= 0) {
+						   xd = "Codigo " + std::to_string(reservadas(buffer)) + "\n";
+					   }
+				   }
+				   if (est == 101 || est == 102 || est == 103 || est == 104 || est == 123 || est == 124 || est == 125 || est == 500 || est == 501 || est == 502 || est == 503 || est == 504 || est == 505 || est == 506 || est == 507) {
+					   i--;
+				   }
+
+				   salidaT += token(est) + xd;
+				   est = 0;
+				   tokens->Text = CUM(salidaT);
+				   posfinal = i;
+
+
+				   buffer = "";
+				   
+			   }
+			   if (est >= 500) {
+				   salidaE += error(est);
+				   est = 0;
+				   errores->Text = CUM(salidaE);
+				   posfinal = i;
+
+			   }
+
+			   i++;
+		   }
+	   }
 // Lee los archivos
 	   string abrirArc(string archive) {
 		   ifstream arch;
@@ -447,6 +551,8 @@ private: System::Void tokens_TextChanged(System::Object^ sender, System::EventAr
 private: System::Void errores_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void nombre_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void Texto_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }

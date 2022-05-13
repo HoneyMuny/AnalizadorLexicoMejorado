@@ -15,26 +15,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyForm.cpp">
+    <ClCompile Include="AnalizadorLexico.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyForm.h">
+    <ClInclude Include="AnalizadorLex.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="regex.txt">
-      <Filter>Archivos de origen\Archivos de recursos</Filter>
-    </Text>
-    <Text Include="mRegex.txt">
-      <Filter>Archivos de origen\Archivos de recursos</Filter>
-    </Text>
-    <Text Include="wRegex.txt">
-      <Filter>Archivos de origen\Archivos de recursos</Filter>
-    </Text>
-    <Text Include="mwRegex.txt">
+    <Text Include="FuncionTrans.txt">
       <Filter>Archivos de origen\Archivos de recursos</Filter>
     </Text>
   </ItemGroup>
