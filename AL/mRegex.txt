@@ -1,0 +1,35 @@
+Entero(s)
+Flotante
+Notacion cientifica
+Representacion de "o"
+String
+Identificador(es)
+Operador de suma
+Operador de resta
+Operador de multiplicacion
+Operador de division
+Inicio de corchete
+Final de corchete
+Informacion entre corchetes
+Informacion entre parentesis
+Inicio de parentesis
+Fin de parentesis
+Inicio de llave
+Final de llave
+Informacion entre llaves
+Asignacion
+Simbolo de porcentaje
+Representacion de "y"
+Punto
+Diferente
+Menor que
+Mayor que
+Coma
+Punto y coma
+Dos puntos
+Hashtag o Numeral
+Guion bajo
+Comillas
+Comilla
+Igual que
+Asignacion igual que
