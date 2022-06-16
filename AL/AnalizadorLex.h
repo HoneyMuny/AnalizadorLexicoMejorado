@@ -321,7 +321,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 		   switch (c) {
 		   case '\n': return 3;
 		   case '\t': return 4;
-		   case '\b': return 5;
+		   case ' ': return 5;
 		   case 'E': return 6;
 		   case'e': return 7;
 		   case '.': return 8;
@@ -411,7 +411,10 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 	   }
 
 	   int reservadas(string algo) {
-		   string reserv[18] = { "class", "endclass", "int", "float", "char", "string", "bool", "if", "else", "do", "while", "input", "output", "def", "to", "break", "loop", "of"};
+		   string reserv[18] = { "class", "endclass", "int", "float",
+			   "char", "string", "bool", "if",
+			   "else", "do", "while", "input", "output",
+			   "def", "to", "break", "loop", "of"};
 
 		   for (int i = 0; i < 18; i++) {
 			   if (algo == reserv[i]) {
@@ -472,8 +475,11 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 			   }
 
 			   chara = archive.at(i);
-
-			   buffer += chara;
+			   if(chara !='\n' && chara !=' ' && chara != '\t')
+			   {
+				   buffer += chara;
+			   }
+			   
 
 			   colum = relaciona(chara);
 
@@ -487,7 +493,11 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 				   // Revisa si el token es una palabra reservada valida
 				   if (est == 100) {
 
-					   buffer = (buffer.substr(0,buffer.size()-1));
+					   if(relaciona(buffer[buffer.size() - 1])!= 0 && relaciona(buffer[buffer.size() - 1]) != 1 && relaciona(buffer[buffer.size() - 1]) != 7 )
+					   {
+						   buffer = (buffer.substr(0, buffer.size() - 1));
+					   }
+					   
 
 					   if (reservadas(buffer) == -1) {
 						   est = 101;
@@ -495,7 +505,8 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 						   xd = "Codigo " + std::to_string(reservadas(buffer)) + "\n";
 					   }
 				   }
-				   if (est == 101 || est == 102 || est == 103 || est == 104 || est == 123 || est == 124 || est == 125 || est == 500 || est == 501 || est == 502 || est == 503 || est == 504 || est == 505 || est == 506 || est == 507) {
+
+				   if (est==100 || est == 101 || est == 102 || est == 103 || est == 104 ||  est== 126 || est == 500 || est == 501 || est == 502 || est == 503 || est == 504 || est == 505 || est == 506 || est == 507) {
 					   i--;
 				   }
 
