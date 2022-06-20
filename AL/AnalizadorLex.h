@@ -61,6 +61,10 @@ namespace AL {
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Label^ nombre;
+	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Label^ syntax;
+
+
 
 	protected:
 
@@ -88,6 +92,8 @@ namespace AL {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->nombre = (gcnew System::Windows::Forms::Label());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->syntax = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// Texto
@@ -107,7 +113,7 @@ namespace AL {
 			this->label2->AutoSize = true;
 			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label2->Location = System::Drawing::Point(265, 23);
+			this->label2->Location = System::Drawing::Point(266, 13);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(94, 29);
 			this->label2->TabIndex = 1;
@@ -118,7 +124,7 @@ namespace AL {
 			this->label3->AutoSize = true;
 			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label3->Location = System::Drawing::Point(265, 383);
+			this->label3->Location = System::Drawing::Point(266, 373);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(93, 29);
 			this->label3->TabIndex = 2;
@@ -135,7 +141,7 @@ namespace AL {
 			// 
 			// tokens
 			// 
-			this->tokens->Location = System::Drawing::Point(270, 53);
+			this->tokens->Location = System::Drawing::Point(271, 43);
 			this->tokens->Name = L"tokens";
 			this->tokens->Size = System::Drawing::Size(154, 164);
 			this->tokens->TabIndex = 4;
@@ -144,7 +150,7 @@ namespace AL {
 			// 
 			// errores
 			// 
-			this->errores->Location = System::Drawing::Point(270, 223);
+			this->errores->Location = System::Drawing::Point(271, 213);
 			this->errores->Name = L"errores";
 			this->errores->Size = System::Drawing::Size(154, 157);
 			this->errores->TabIndex = 5;
@@ -211,11 +217,36 @@ namespace AL {
 			this->nombre->Text = L"Archivo en uso";
 			this->nombre->Click += gcnew System::EventHandler(this, &MyForm::nombre_Click);
 			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label1->Location = System::Drawing::Point(256, 402);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(84, 24);
+			this->label1->TabIndex = 11;
+			this->label1->Text = L"Sintaxis: ";
+			// 
+			// syntax
+			// 
+			this->syntax->AutoSize = true;
+			this->syntax->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->syntax->Location = System::Drawing::Point(339, 402);
+			this->syntax->Name = L"syntax";
+			this->syntax->Size = System::Drawing::Size(20, 24);
+			this->syntax->TabIndex = 12;
+			this->syntax->Text = L"  ";
+			this->syntax->Click += gcnew System::EventHandler(this, &MyForm::syntax_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(463, 487);
+			this->Controls->Add(this->syntax);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->nombre);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button4);
@@ -507,7 +538,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 					   }
 				   }
 
-				   if (est==100 || est == 101 || est == 102 || est == 103 || est == 104 ||  est== 126 || est == 500 || est == 501 || est == 502 || est == 503 || est == 504 || est == 505 || est == 506 || est == 507) {
+				   if (est==100 || est == 101 || est == 102 || est == 103 || est == 104 || est == 109 || est == 111 || est == 113 || est== 126 || est == 500 || est == 501 || est == 502 || est == 503 || est == 504 || est == 505 || est == 506 || est == 507) {
 					   i--;
 				   }
 
@@ -565,6 +596,9 @@ private: System::Void errores_TextChanged(System::Object^ sender, System::EventA
 private: System::Void nombre_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void Texto_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+
+private: System::Void syntax_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }
